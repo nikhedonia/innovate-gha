@@ -1,24 +1,13 @@
 import React from "react";
 import Card from '@material-ui/core/Card';
 import { makeStyles } from '@material-ui/core/styles';
+import {GetReposQuery, Repository} from "./graphql";
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 export type RepositoryProps = {
-    repository: RepositoryType
-}
-
-export type RepositoryType = {
-    name: string,
-    updatedAt: Date,
-    workflows: Array<WorkflowProps>
-}
-
-type WorkflowProps = {
-    name: string,
-    state: string,
-    badge_url: string
-}
+    repository: Repository
+};
 
 const useStyles = makeStyles({
     root: {
@@ -37,7 +26,7 @@ const useStyles = makeStyles({
     },
 });
 
-function Repository({repository}: RepositoryProps) {
+function RepositoryComponent({repository}: RepositoryProps) {
     const classes = useStyles();
     const {name} = repository;
 
@@ -52,4 +41,4 @@ function Repository({repository}: RepositoryProps) {
     );
 }
 
-export default Repository;
+export default RepositoryComponent;
