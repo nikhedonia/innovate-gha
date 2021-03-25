@@ -19626,6 +19626,79 @@ export type ViewerHovercardContext = HovercardContext & {
 };
 
 
+export type GetReposQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetReposQuery = (
+  { __typename?: 'Query' }
+  & { organization?: Maybe<(
+    { __typename?: 'Organization' }
+    & { repositories: (
+      { __typename?: 'RepositoryConnection' }
+      & { nodes?: Maybe<Array<Maybe<(
+        { __typename?: 'Repository' }
+        & Pick<Repository, 'id' | 'name' | 'updatedAt'>
+        & { defaultBranchRef?: Maybe<(
+          { __typename?: 'Ref' }
+          & { target?: Maybe<{ __typename?: 'Blob' } | (
+            { __typename?: 'Commit' }
+            & { history: (
+              { __typename?: 'CommitHistoryConnection' }
+              & { nodes?: Maybe<Array<Maybe<(
+                { __typename?: 'Commit' }
+                & Pick<Commit, 'message'>
+              )>>> }
+            ) }
+          ) | { __typename?: 'Tag' } | { __typename?: 'Tree' }>, associatedPullRequests: (
+            { __typename?: 'PullRequestConnection' }
+            & { nodes?: Maybe<Array<Maybe<(
+              { __typename?: 'PullRequest' }
+              & Pick<PullRequest, 'body' | 'changedFiles' | 'mergeable'>
+              & { author?: Maybe<(
+                { __typename?: 'Bot' }
+                & Pick<Bot, 'login'>
+              ) | (
+                { __typename?: 'EnterpriseUserAccount' }
+                & Pick<EnterpriseUserAccount, 'login'>
+              ) | (
+                { __typename?: 'Mannequin' }
+                & Pick<Mannequin, 'login'>
+              ) | (
+                { __typename?: 'Organization' }
+                & Pick<Organization, 'login'>
+              ) | (
+                { __typename?: 'User' }
+                & Pick<User, 'login'>
+              )>, reviews?: Maybe<(
+                { __typename?: 'PullRequestReviewConnection' }
+                & { nodes?: Maybe<Array<Maybe<(
+                  { __typename?: 'PullRequestReview' }
+                  & { author?: Maybe<(
+                    { __typename?: 'Bot' }
+                    & Pick<Bot, 'login'>
+                  ) | (
+                    { __typename?: 'EnterpriseUserAccount' }
+                    & Pick<EnterpriseUserAccount, 'login'>
+                  ) | (
+                    { __typename?: 'Mannequin' }
+                    & Pick<Mannequin, 'login'>
+                  ) | (
+                    { __typename?: 'Organization' }
+                    & Pick<Organization, 'login'>
+                  ) | (
+                    { __typename?: 'User' }
+                    & Pick<User, 'login'>
+                  )> }
+                )>>> }
+              )> }
+            )>>> }
+          ) }
+        )> }
+      )>>> }
+    ) }
+  )> }
+);
+
 export type GetViewerQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -19638,6 +19711,72 @@ export type GetViewerQuery = (
 );
 
 
+export const GetReposDocument = gql`
+    query GetRepos {
+  organization(login: "newdaycards") {
+    repositories(first: 10) {
+      nodes {
+        id
+        name
+        updatedAt
+        defaultBranchRef {
+          target {
+            ... on Commit {
+              history(first: 10) {
+                nodes {
+                  message
+                }
+              }
+            }
+          }
+          associatedPullRequests(first: 1) {
+            nodes {
+              body
+              author {
+                login
+              }
+              changedFiles
+              mergeable
+              reviews {
+                nodes {
+                  author {
+                    login
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetReposQuery__
+ *
+ * To run a query within a React component, call `useGetReposQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReposQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReposQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetReposQuery(baseOptions?: Apollo.QueryHookOptions<GetReposQuery, GetReposQueryVariables>) {
+        return Apollo.useQuery<GetReposQuery, GetReposQueryVariables>(GetReposDocument, baseOptions);
+      }
+export function useGetReposLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReposQuery, GetReposQueryVariables>) {
+          return Apollo.useLazyQuery<GetReposQuery, GetReposQueryVariables>(GetReposDocument, baseOptions);
+        }
+export type GetReposQueryHookResult = ReturnType<typeof useGetReposQuery>;
+export type GetReposLazyQueryHookResult = ReturnType<typeof useGetReposLazyQuery>;
+export type GetReposQueryResult = Apollo.QueryResult<GetReposQuery, GetReposQueryVariables>;
 export const GetViewerDocument = gql`
     query GetViewer {
   viewer {
