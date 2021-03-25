@@ -5,6 +5,7 @@ import {Commit, Repository} from "./graphql";
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
+import {Accordion} from "@material-ui/core";
 
 export type RepositoryProps = {
     repository: Repository
@@ -35,17 +36,15 @@ function RepositoryComponent({repository}: RepositoryProps) {
     return (
         <Card className={classes.root}>
             <CardContent>
-                <Typography className={classes.title} color="textSecondary" gutterBottom>
+                <Typography variant="h5" gutterBottom>
                     {name}
                 </Typography>
-                <Typography className={classes.title} color="textSecondary" gutterBottom>
-                    Last updated: {moment(updatedAt).fromNow()}
-                    {target?.abbreviatedOid}
-                    {target?.author?.name}
-                    {target?.message}
+                <Typography variant="body2" component="p">
+                    <b> {defaultBranchRef?.name}</b> updated <b>{moment(updatedAt).fromNow()}</b>
+                    {target?.author ? <span>by <b>{target?.author?.name}</b></span> : null}
                 </Typography>
-                <Typography className={classes.title} color="textSecondary" gutterBottom>
-                    {defaultBranchRef?.name}
+                <Typography className={classes.title} color="textSecondary" component="p" gutterBottom>
+                    {target?.message} ({target?.abbreviatedOid})
                 </Typography>
             </CardContent>
         </Card>
