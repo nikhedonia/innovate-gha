@@ -1,36 +1,67 @@
-import React from "react";
+import React, { ReactNode, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import {
   ApolloClient,
   ApolloProvider,
+  gql,
   HttpLink,
   InMemoryCache,
 } from "@apollo/client";
+import {schema, resolvers}  from './extensions';
 import App from "./App";
 
-const token = process.env.REACT_APP_GITHUB_TOKEN || '';
+interface ProviderProps {
+  children: ReactNode
+} 
 
-const authorization = `Bearer ${token}`;
+function Provider({children}: ProviderProps) {
+  const [token, setToken] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null); 
 
-const cache = new InMemoryCache();
-// @ts-ignore
-window.cache = cache;
-const link = new HttpLink({
-  uri: "https://api.github.com/graphql",
-  headers: {
-    authorization,
-  },
-});
+  if (token !== "") {
+    const authorization = `Bearer ${token}`;
 
-const client = new ApolloClient({
-  link,
-  cache,
-});
+    const cache = new InMemoryCache();
+    // @ts-ignore
+    window.cache = cache;
+    const link = new HttpLink({
+      uri: "https://api.github.com/graphql",
+      headers: {
+        authorization,
+      },
+    });
+
+    const client = new ApolloClient({
+      link,
+      cache,
+      typeDefs: schema,
+      resolvers
+    });
+
+    return (
+      <ApolloProvider client={client} >
+        {children}
+      </ApolloProvider>
+    )
+  }
+
+  return (
+    <div>
+    <label>
+      SignUp with your Personal Github Token
+    </label>
+    <input ref={inputRef} type="password" name="github_token"/>
+    <button type="submit" onClick={()=>{
+      setToken(inputRef?.current?.value || "")
+    }}> Login </button>
+  </div>
+  )
+}
 
 ReactDOM.render(
-  <ApolloProvider client={client}>
+  <Provider>
     <App />
-  </ApolloProvider>,
+  </Provider>,
   document.getElementById("root")
 );
 
