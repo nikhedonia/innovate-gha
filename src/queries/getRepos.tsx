@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 export default gql`
-query GetRepos {
-    organization(login: "newdaycards") {
+query GetRepos ($org: String!) {
+    organization(login: $org) {
         repositories(first: 10) {
             nodes {
                 id
@@ -31,7 +31,7 @@ query GetRepos {
                             # assignees { ... }
                             # comments { ... }
                             # files { ... } # access changed files
-                            reviews {
+                            reviews (first: 1) {
                                 nodes {
                                     author { login }
                                     # reactions { }

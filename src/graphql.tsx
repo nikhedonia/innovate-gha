@@ -19626,7 +19626,26 @@ export type ViewerHovercardContext = HovercardContext & {
 };
 
 
-export type GetReposQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetOrgsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetOrgsQuery = (
+  { __typename?: 'Query' }
+  & { viewer: (
+    { __typename?: 'User' }
+    & { organizations: (
+      { __typename?: 'OrganizationConnection' }
+      & { nodes?: Maybe<Array<Maybe<(
+        { __typename?: 'Organization' }
+        & Pick<Organization, 'avatarUrl' | 'login'>
+      )>>> }
+    ) }
+  ) }
+);
+
+export type GetReposQueryVariables = Exact<{
+  org: Scalars['String'];
+}>;
 
 
 export type GetReposQuery = (
@@ -19710,9 +19729,46 @@ export type GetViewerQuery = (
 );
 
 
+export const GetOrgsDocument = gql`
+    query GetOrgs {
+  viewer {
+    organizations(first: 10) {
+      nodes {
+        avatarUrl
+        login
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetOrgsQuery__
+ *
+ * To run a query within a React component, call `useGetOrgsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrgsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrgsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetOrgsQuery(baseOptions?: Apollo.QueryHookOptions<GetOrgsQuery, GetOrgsQueryVariables>) {
+        return Apollo.useQuery<GetOrgsQuery, GetOrgsQueryVariables>(GetOrgsDocument, baseOptions);
+      }
+export function useGetOrgsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrgsQuery, GetOrgsQueryVariables>) {
+          return Apollo.useLazyQuery<GetOrgsQuery, GetOrgsQueryVariables>(GetOrgsDocument, baseOptions);
+        }
+export type GetOrgsQueryHookResult = ReturnType<typeof useGetOrgsQuery>;
+export type GetOrgsLazyQueryHookResult = ReturnType<typeof useGetOrgsLazyQuery>;
+export type GetOrgsQueryResult = Apollo.QueryResult<GetOrgsQuery, GetOrgsQueryVariables>;
 export const GetReposDocument = gql`
-    query GetRepos {
-  organization(login: "newdaycards") {
+    query GetRepos($org: String!) {
+  organization(login: $org) {
     repositories(first: 10) {
       nodes {
         id
@@ -19737,7 +19793,7 @@ export const GetReposDocument = gql`
               }
               changedFiles
               mergeable
-              reviews {
+              reviews(first: 1) {
                 nodes {
                   author {
                     login
@@ -19765,6 +19821,7 @@ export const GetReposDocument = gql`
  * @example
  * const { data, loading, error } = useGetReposQuery({
  *   variables: {
+ *      org: // value for 'org'
  *   },
  * });
  */
