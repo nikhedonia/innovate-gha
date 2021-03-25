@@ -1,10 +1,11 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Accordion, AccordionDetails, Fab, List} from "@material-ui/core";
 import WorkflowRun from "./WorkflowRun";
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
+import {Octokit} from "@octokit/core";
 
 export type WorkflowProps = {
     workflow: any
@@ -63,9 +64,13 @@ const workflowRuns = [
     }
 ]
 
+const octokit = new Octokit({ auth: `a74dc9f9ec9c04e5f5f196a717eb8e3942462436` });
+
+
+
 function WorkflowComponent({workflow}: WorkflowProps) {
     const classes = useStyles();
-    const {id, name, state, badge_url} = workflow;
+    const {id, name, state} = workflow;
 
     return (
         <Accordion>
@@ -73,17 +78,17 @@ function WorkflowComponent({workflow}: WorkflowProps) {
                               aria-controls="panel1a-content"
                               id="panel1a-header">
                 {name} ({state})
-                <Fab size="small" aria-label="Run">
+                {/*<Fab size="small" aria-label="Run">
                     <PlayCircleOutlineIcon href={`https://api.github.com/repos/octocat/hello-world/actions/workflows/{id}/dispatches`}/>
-                </Fab>
+                </Fab>*/}
             </AccordionSummary>
-            <AccordionDetails>
+           {/* <AccordionDetails>
                 <List component="nav" className={classes.root} aria-label="mailbox folders">
                     {workflowRuns.map(workflow =>
                         <WorkflowRun workflowRun={workflow}/>
                         )}
                 </List>
-            </AccordionDetails>
+            </AccordionDetails>*/}
         </Accordion>
     );
 };

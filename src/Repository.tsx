@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Card from '@material-ui/core/Card';
 import { makeStyles } from '@material-ui/core/styles';
 import {Commit, Repository} from "./graphql";
@@ -6,6 +6,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import Workflow from "./Workflow";
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
+import {Octokit} from "@octokit/core";
 
 export type RepositoryProps = {
     repository: Repository
@@ -28,37 +30,25 @@ const useStyles = makeStyles({
     },
 });
 
-const workflows = [
-    {
-        "id": 161335,
-        "node_id": "MDg6V29ya2Zsb3cxNjEzMzU=",
-        "name": "CI",
-        "path": ".github/workflows/blank.yaml",
-        "state": "active",
-        "created_at": "2020-01-08T23:48:37.000-08:00",
-        "updated_at": "2020-01-08T23:50:21.000-08:00",
-        "url": "https://api.github.com/repos/octo-org/octo-repo/actions/workflows/161335",
-        "html_url": "https://github.com/octo-org/octo-repo/blob/master/.github/workflows/161335",
-        "badge_url": "https://github.com/octo-org/octo-repo/workflows/CI/badge.svg"
-    },
-    {
-        "id": 269289,
-        "node_id": "MDE4OldvcmtmbG93IFNlY29uZGFyeTI2OTI4OQ==",
-        "name": "Linter",
-        "path": ".github/workflows/linter.yaml",
-        "state": "active",
-        "created_at": "2020-01-08T23:48:37.000-08:00",
-        "updated_at": "2020-01-08T23:50:21.000-08:00",
-        "url": "https://api.github.com/repos/octo-org/octo-repo/actions/workflows/269289",
-        "html_url": "https://github.com/octo-org/octo-repo/blob/master/.github/workflows/269289",
-        "badge_url": "https://github.com/octo-org/octo-repo/workflows/Linter/badge.svg"
-    }
-]
+const octokit = new Octokit({ auth: `53936561fb5e68b6376a9afd7efdd0f536f46595` });
+
 
 function RepositoryComponent({repository}: RepositoryProps) {
     const classes = useStyles();
     const {name, updatedAt, defaultBranchRef} = repository;
     const target = defaultBranchRef?.target as Commit;
+    const [workflows, setWorkflows] = useState<any>([])
+
+    useEffect(() => {
+        getWorkflows();
+    });
+
+    async function getWorkflows() {
+        try {
+            const newWorkflows = await octokit.request(`GET /repos/newdaycards/${name}/actions/workflows`) as any;
+            setWorkflows(newWorkflows);
+        }catch{}
+    }
 
     return (
         <Card className={classes.root}>
@@ -74,8 +64,8 @@ function RepositoryComponent({repository}: RepositoryProps) {
                     {target?.message} ({target?.abbreviatedOid})
                 </Typography>
                 <div>
-                    {workflows.map(workflow =>
-                        <Workflow workflow={workflow}/>
+                    {workflows?.data?.workflows.map((workflow: any, i: number) =>
+                        <Workflow workflow={workflow} key={i}/>
                     )}
                 </div>
             </CardContent>
