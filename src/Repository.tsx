@@ -1,7 +1,7 @@
 import React from "react";
 import Card from '@material-ui/core/Card';
 import { makeStyles } from '@material-ui/core/styles';
-import {Commit, GitObject, Ref, Repository} from "./graphql";
+import {Commit, Repository} from "./graphql";
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';

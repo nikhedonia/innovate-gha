@@ -1,7 +1,7 @@
 import "./App.css";
 import React from "react";
 import {useGetReposQuery, useGetViewerQuery, Repository} from "./graphql";
-import RepositoryComponent, {RepositoryProps} from "./Repository";
+import RepositoryComponent from "./Repository";
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
