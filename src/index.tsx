@@ -14,7 +14,7 @@ interface ProviderProps {
 } 
 
 function Provider({children}: ProviderProps) {
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(process.env.REACT_APP_GITHUB_TOKEN);
   const inputRef = useRef<HTMLInputElement>(null); 
 
   if (token !== "") {

@@ -2,9 +2,9 @@ import React from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {Accordion, AccordionDetails, List} from "@material-ui/core";
+import {Accordion, AccordionDetails, Fab, List} from "@material-ui/core";
 import WorkflowRun from "./WorkflowRun";
-
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 
 export type WorkflowProps = {
     workflow: any
@@ -65,7 +65,7 @@ const workflowRuns = [
 
 function WorkflowComponent({workflow}: WorkflowProps) {
     const classes = useStyles();
-    const {name, state, badge_url} = workflow;
+    const {id, name, state, badge_url} = workflow;
 
     return (
         <Accordion>
@@ -73,7 +73,9 @@ function WorkflowComponent({workflow}: WorkflowProps) {
                               aria-controls="panel1a-content"
                               id="panel1a-header">
                 {name} ({state})
-                <img src={badge_url}/>
+                <Fab size="small" aria-label="Run">
+                    <PlayCircleOutlineIcon href={`https://api.github.com/repos/octocat/hello-world/actions/workflows/{id}/dispatches`}/>
+                </Fab>
             </AccordionSummary>
             <AccordionDetails>
                 <List component="nav" className={classes.root} aria-label="mailbox folders">
