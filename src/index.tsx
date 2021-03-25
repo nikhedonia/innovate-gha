@@ -8,6 +8,7 @@ import {
 } from "@apollo/client";
 import {schema, resolvers}  from './extensions';
 import App from "./App";
+import qs from 'querystring';
 
 interface ProviderProps {
   children: ReactNode
@@ -17,8 +18,13 @@ function Provider({children}: ProviderProps) {
   const [token, setToken] = useState("");
   const inputRef = useRef<HTMLInputElement>(null); 
 
-  if (token !== "") {
-    const authorization = `Bearer ${token}`;
+  const qsToken = qs.parse(window.location.search.replace('?', ''));
+  if (token !== "" || qsToken.token !== undefined ) {
+    var authorization;
+    if (token !== "")
+      authorization = `Bearer ${token}`;
+    else
+      authorization = `Bearer ${qsToken.token}`;
 
     const cache = new InMemoryCache();
     // @ts-ignore
