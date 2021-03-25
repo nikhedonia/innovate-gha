@@ -8,6 +8,7 @@ import moment from 'moment';
 import Workflow from "./Workflow";
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import {Octokit} from "@octokit/core";
+import qs from 'querystring';
 
 export type RepositoryProps = {
     repository: Repository
@@ -29,8 +30,8 @@ const useStyles = makeStyles({
         marginBottom: 12,
     },
 });
-
-const octokit = new Octokit({ auth: `53936561fb5e68b6376a9afd7efdd0f536f46595` });
+const qsToken = qs.parse(window.location.search.replace('?', ''));
+const octokit = new Octokit({ auth: qsToken.token });
 
 
 function RepositoryComponent({repository}: RepositoryProps) {

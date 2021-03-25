@@ -6,6 +6,7 @@ import {Accordion, AccordionDetails, Fab, List} from "@material-ui/core";
 import WorkflowRun from "./WorkflowRun";
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import {Octokit} from "@octokit/core";
+import qs from 'querystring';
 
 export type WorkflowProps = {
     workflow: any
@@ -63,10 +64,6 @@ const workflowRuns = [
         }
     }
 ]
-
-const octokit = new Octokit({ auth: `a74dc9f9ec9c04e5f5f196a717eb8e3942462436` });
-
-
 
 function WorkflowComponent({workflow}: WorkflowProps) {
     const classes = useStyles();
