@@ -1,0 +1,40 @@
+{
+  "name": "cra-template-fullstack-apollo",
+  "version": "0.2.1",
+  "private": true,
+  "dependencies": {
+    "@apollo/client": "^3.2.3",
+    "@types/graphql": "^14.2.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "generate": "graphql-codegen --config codegen.yml",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.17.10",
+    "@graphql-codegen/typescript": "^1.17.8",
+    "@graphql-codegen/typescript-operations": "^1.17.8",
+    "@graphql-codegen/typescript-react-apollo": "^2.0.7",
+    "@types/jest": "24.0.11",
+    "@types/node": "11.13.6",
+    "@types/react": "16.9.29",
+    "@types/react-dom": "*",
+    "graphql": "^15.3.0",
+    "react-scripts": "3.4.1",
+    "typescript": "^4.0.3"
+  }
+}
