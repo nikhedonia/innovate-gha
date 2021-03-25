@@ -23,7 +23,8 @@ jobs:
           node-version: '14'
       - run: yarn install
       - run: yarn build
-      
+        env:
+          CI: false
       - uses: bacongobbler/azure-blob-storage-upload@v1.1.1
         with:
           source_dir: build
