@@ -1,0 +1,3 @@
+extend type Repository {
+  action: string
+}

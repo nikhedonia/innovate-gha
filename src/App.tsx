@@ -1,8 +1,8 @@
 import "./App.css";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useGetViewerQuery } from "./graphql";
-
+import {Octokit} from "@octokit/rest";
 const hasToken = process.env.REACT_APP_GITHUB_TOKEN;
 
 const networkStatusMessage = (status: number) => {
@@ -28,6 +28,8 @@ const networkStatusMessage = (status: number) => {
 
 function App() {
   const { data, loading, error, networkStatus } = useGetViewerQuery();
+
+
   return (
     <div className="App">
       <h1> Fullstack Apollo Template </h1>
