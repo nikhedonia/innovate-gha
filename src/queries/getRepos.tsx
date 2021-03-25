@@ -8,15 +8,16 @@ query GetRepos {
                 name
                 updatedAt
                 defaultBranchRef { 
+                    name
                     target {
-                    ... on Commit { # if commit
-                            history(first: 10) { # get commit history
-                                nodes {
-                                    message
-                                }
-                            }
+                        ... on Commit {
+                          abbreviatedOid
+                          message
+                          author {
+                            name
+                          }
                         }
-                    }
+                      }
 
                     associatedPullRequests(first: 1) { # pull requests to this branch
                         nodes {

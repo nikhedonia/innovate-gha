@@ -19640,15 +19640,14 @@ export type GetReposQuery = (
         & Pick<Repository, 'id' | 'name' | 'updatedAt'>
         & { defaultBranchRef?: Maybe<(
           { __typename?: 'Ref' }
+          & Pick<Ref, 'name'>
           & { target?: Maybe<{ __typename?: 'Blob' } | (
             { __typename?: 'Commit' }
-            & { history: (
-              { __typename?: 'CommitHistoryConnection' }
-              & { nodes?: Maybe<Array<Maybe<(
-                { __typename?: 'Commit' }
-                & Pick<Commit, 'message'>
-              )>>> }
-            ) }
+            & Pick<Commit, 'abbreviatedOid' | 'message'>
+            & { author?: Maybe<(
+              { __typename?: 'GitActor' }
+              & Pick<GitActor, 'name'>
+            )> }
           ) | { __typename?: 'Tag' } | { __typename?: 'Tree' }>, associatedPullRequests: (
             { __typename?: 'PullRequestConnection' }
             & { nodes?: Maybe<Array<Maybe<(
@@ -19720,12 +19719,13 @@ export const GetReposDocument = gql`
         name
         updatedAt
         defaultBranchRef {
+          name
           target {
             ... on Commit {
-              history(first: 10) {
-                nodes {
-                  message
-                }
+              abbreviatedOid
+              message
+              author {
+                name
               }
             }
           }

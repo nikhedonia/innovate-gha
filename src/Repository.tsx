@@ -1,9 +1,10 @@
 import React from "react";
 import Card from '@material-ui/core/Card';
 import { makeStyles } from '@material-ui/core/styles';
-import {GetReposQuery, Repository} from "./graphql";
+import {Commit, GitObject, Ref, Repository} from "./graphql";
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import moment from 'moment';
 
 export type RepositoryProps = {
     repository: Repository
@@ -28,13 +29,23 @@ const useStyles = makeStyles({
 
 function RepositoryComponent({repository}: RepositoryProps) {
     const classes = useStyles();
-    const {name} = repository;
+    const {name, updatedAt, defaultBranchRef} = repository;
+    const target = defaultBranchRef?.target as Commit;
 
     return (
         <Card className={classes.root}>
             <CardContent>
                 <Typography className={classes.title} color="textSecondary" gutterBottom>
                     {name}
+                </Typography>
+                <Typography className={classes.title} color="textSecondary" gutterBottom>
+                    Last updated: {moment(updatedAt).fromNow()}
+                    {target?.abbreviatedOid}
+                    {target?.author?.name}
+                    {target?.message}
+                </Typography>
+                <Typography className={classes.title} color="textSecondary" gutterBottom>
+                    {defaultBranchRef?.name}
                 </Typography>
             </CardContent>
         </Card>
