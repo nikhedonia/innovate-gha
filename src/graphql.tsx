@@ -19637,7 +19637,7 @@ export type GetOrgsQuery = (
       { __typename?: 'OrganizationConnection' }
       & { nodes?: Maybe<Array<Maybe<(
         { __typename?: 'Organization' }
-        & Pick<Organization, 'avatarUrl' | 'name'>
+        & Pick<Organization, 'avatarUrl' | 'login'>
       )>>> }
     ) }
   ) }
@@ -19735,7 +19735,7 @@ export const GetOrgsDocument = gql`
     organizations(first: 10) {
       nodes {
         avatarUrl
-        name
+        login
       }
     }
   }
@@ -19793,7 +19793,7 @@ export const GetReposDocument = gql`
               }
               changedFiles
               mergeable
-              reviews {
+              reviews(first: 1) {
                 nodes {
                   author {
                     login

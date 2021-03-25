@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box } from "@material-ui/core";
+import React, {useState} from 'react';
+import { Box, Grid } from "@material-ui/core";
 import { useGetOrgsQuery } from './graphql';
 
 type Org = {
@@ -7,7 +7,7 @@ type Org = {
     name: string | null | undefined;
   }
   interface OrgPickerProps {
-    onLoad(x: Org):void
+    onLoad(x: string):void
   }
   
 export default function OrgPicker({onLoad}: OrgPickerProps) {
@@ -31,21 +31,21 @@ export default function OrgPicker({onLoad}: OrgPickerProps) {
           ?.organizations?.nodes ||[])
         .map( (x, i) => (
           <button
-          key={x?.name || i}  
+          key={x?.login || i}  
             onClick={()=>{
-              onLoad(x as Org);
+              onLoad(x?.login || '');
               console.log('selected', x);
-              setSelected(x!.name || '');
+              setSelected(x!.login || '');
             }}
             style={{
               border:
-                (selected === x?.name) 
+                (selected === x?.login) 
                   ? 'solid 1px blue'
                   : 'none',
               }}
           > 
             <img src={x?.avatarUrl || ''} style={{width: '2em', height: '2em'}}  />
-            <span>{x?.name || ''}</span>
+            <span>{x?.login || ''}</span>
           </button>
         ))
       }</Grid>

@@ -9,8 +9,8 @@ on:
       - master
 
 env:
-  STORAGE_ACCOUNT_KEY: asfgfdg
-  STORAGE_ACCOUNT_NAME: asfdgfsdfg
+  STORAGE_ACCOUNT_CONTAINER: $web
+  STORAGE_ACCOUNT_CONNECTIONSTRING: DefaultEndpointsProtocol=https;AccountName=storagedemotest;AccountKey=IZOnaPGZI6bhCLcnVeAQLuz2rvCuVclHc01+vB5Skul1NP7hBgiKFFTNjiWEiqaef/+k7LtV5ErJCnShZk+tiQ==;EndpointSuffix=core.windows.net
 
 jobs:
   buildandtest:
@@ -23,3 +23,11 @@ jobs:
           node-version: '14'
       - run: yarn install
       - run: yarn build
+        env:
+          CI: false
+      - uses: bacongobbler/azure-blob-storage-upload@v1.1.1
+        with:
+          source_dir: build
+          container_name: ${{ env.STORAGE_ACCOUNT_CONTAINER }}
+          connection_string: ${{ env.STORAGE_ACCOUNT_CONNECTIONSTRING }}
+          sync: false

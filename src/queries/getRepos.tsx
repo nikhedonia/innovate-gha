@@ -31,7 +31,7 @@ query GetRepos ($org: String!) {
                             # assignees { ... }
                             # comments { ... }
                             # files { ... } # access changed files
-                            reviews {
+                            reviews (first: 1) {
                                 nodes {
                                     author { login }
                                     # reactions { }

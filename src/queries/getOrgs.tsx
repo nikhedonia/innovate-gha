@@ -5,7 +5,7 @@ query GetOrgs {
       organizations(first: 10) {
         nodes {
           avatarUrl
-          name
+          login
         }
       }
     }
