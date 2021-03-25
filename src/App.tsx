@@ -1,9 +1,10 @@
 import "./App.css";
-import React from "react";
-import {useGetReposQuery, useGetViewerQuery, Repository} from "./graphql";
+import React, { useEffect, useState } from "react";
+import {useGetReposQuery, useGetOrgsQuery, useGetViewerQuery, Repository} from "./graphql";
 import RepositoryComponent from "./Repository";
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import { Box, Card } from "@material-ui/core";
 
 
 const hasToken = process.env.REACT_APP_GITHUB_TOKEN;
@@ -40,47 +41,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function Repos({org}: {org: string}) {
+  const { data } = useGetReposQuery();
+  return 
+}
+
 function App() {
   const { loading, error, networkStatus } = useGetViewerQuery();
-  const { data } = useGetReposQuery();
   const classes = useStyles();
+  const [org, setOrg] = useState<Org|null>(null);
   return (
     <div>
       <h1> Fullstack Apollo Template </h1>
       <div>
         <div>
-          <h2> Status Overview </h2>
-          <ul>
-            <li> {hasToken ? "token has been set" : "no token provided"} </li>
-            <li> Network Status: {networkStatusMessage(networkStatus)} </li>
-            <li> loading: {loading ? "true" : "false"} </li>
-            <li> error: {error ? "true" : "false"} </li>
-            <li> hasData: {data ? "true" : "false"} </li>
-          </ul>
-          <h3>Query Result</h3>
-          <div className={classes.root}>
-          <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="flex-start"
-              spacing={2}
-          >
-            {!loading && data?.organization?.repositories?.nodes?.map((repository) =>
-                repository ? <Grid item xs={12} sm={6}>
-                  <RepositoryComponent repository={repository as Repository}/>
-                </Grid> : null
-            )}
-          </Grid>
-          </div>
-          <code>
-            <pre>{
-              loading
-                ? "loading"
-                : JSON.stringify(error ? error: data, null, 2)
-            }</pre>
-          </code>
-        </div>
+          <OrgPicker onLoad={setOrg} />
+          <Repos org={org} />
       </div>
     </div>
   );
