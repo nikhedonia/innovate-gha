@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function App() {
-  const { loading, error, networkStatus } = useGetViewerQuery();
+  const { loading, error } = useGetViewerQuery();
   const { data } = useGetReposQuery();
   const classes = useStyles();
   return (
