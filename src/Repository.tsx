@@ -6,12 +6,12 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import Workflow from "./Workflow";
-import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import {Octokit} from "@octokit/core";
 import qs from 'querystring';
 
 export type RepositoryProps = {
-    repository: Repository
+    repository: Repository,
+    owner: string
 };
 
 const useStyles = makeStyles({
@@ -34,7 +34,7 @@ const qsToken = qs.parse(window.location.search.replace('?', ''));
 const octokit = new Octokit({ auth: qsToken.token });
 
 
-function RepositoryComponent({repository}: RepositoryProps) {
+function RepositoryComponent({repository, owner}: RepositoryProps) {
     const classes = useStyles();
     const {name, updatedAt, defaultBranchRef} = repository;
     const target = defaultBranchRef?.target as Commit;
@@ -42,11 +42,11 @@ function RepositoryComponent({repository}: RepositoryProps) {
 
     useEffect(() => {
         getWorkflows();
-    });
+    }, []);
 
     async function getWorkflows() {
         try {
-            const newWorkflows = await octokit.request(`GET /repos/newdaycards/${name}/actions/workflows`) as any;
+            const newWorkflows = await octokit.request(`GET /repos/${owner}/${name}/actions/workflows`) as any;
             setWorkflows(newWorkflows);
         }catch{}
     }
@@ -66,7 +66,7 @@ function RepositoryComponent({repository}: RepositoryProps) {
                 </Typography>
                 <div>
                     {workflows?.data?.workflows.map((workflow: any, i: number) =>
-                        <Workflow workflow={workflow} key={i}/>
+                        <Workflow workflow={workflow} repo={name} owner={owner} key={i}/>
                     )}
                 </div>
             </CardContent>

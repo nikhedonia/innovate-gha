@@ -8,9 +8,6 @@ import Typography from "@material-ui/core/Typography";
 import OrgPicker from "./OrgPicker";
 
 
-const hasToken = process.env.REACT_APP_GITHUB_TOKEN;
-
-
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -32,9 +29,9 @@ function Repos({org}: {org:string}) {
       alignItems="flex-start"
       spacing={2}
     >
-    {!loading && data?.organization?.repositories?.nodes?.map((repository) =>
+    {!loading && data?.organization?.repositories?.nodes?.map((repository, i) =>
         repository ? <Grid item xs={12} sm={6}>
-          <RepositoryComponent repository={repository as Repository}/>
+          <RepositoryComponent owner={org} repository={repository as Repository} key={i}/>
         </Grid> : null
     )}
     </Grid>

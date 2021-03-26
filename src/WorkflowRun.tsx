@@ -1,35 +1,35 @@
 import React from "react";
-import { makeStyles } from '@material-ui/core/styles';
 import {Divider, Fab, ListItem, ListItemText} from "@material-ui/core";
 import Typography from '@material-ui/core/Typography';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import ReplayOutlinedIcon from '@material-ui/icons/ReplayOutlined';
+import qs from "querystring";
+import {Octokit} from "@octokit/core";
 
 export type WorkflowRunProps = {
-    workflowRun: any
+    workflowRun: any,
+    owner: string,
+    repo: string
 };
 
-const useStyles = makeStyles({
-    root: {
-        minWidth: 275,
-    },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
-    },
-    title: {
-        fontSize: 14,
-    },
-    pos: {
-        marginBottom: 12,
-    },
-});
+const qsToken = qs.parse(window.location.search.replace('?', ''));
+const octokit = new Octokit({ auth: qsToken.token });
 
-function WorkflowRunComponent({workflowRun}: WorkflowRunProps) {
-    const classes = useStyles();
-    const {run_number, head_branch, head_commit, event, status, updated_at, cancel_url} = workflowRun;
+function WorkflowRunComponent({workflowRun, owner, repo}: WorkflowRunProps) {
+    const {id, run_number, head_branch, head_commit, event, conclusion, status, updated_at, cancel_url} = workflowRun;
     const {message, author} = head_commit;
+
+    async function reRun() {
+        try {
+            await octokit.request(`POST /repos/${owner}/${repo}/actions/runs/${id}/rerun`)
+        }catch{}
+    }
+
+    async function cancel() {
+        try {
+            await octokit.request(`POST /repos/${owner}/${repo}/actions/runs/${id}/cancel`)
+        }catch{}
+    }
 
     return (
         <React.Fragment>
@@ -37,12 +37,12 @@ function WorkflowRunComponent({workflowRun}: WorkflowRunProps) {
             <ListItemText primary={
                 <Typography>#{run_number} {event} to {head_branch} {message}</Typography>
             } secondary={
-                <Typography>{updated_at} {status}</Typography>
+                <Typography>{updated_at} {conclusion}</Typography>
             }/>
             {status == 'in_progress' ?  <Fab size="small" aria-label="Cancel Run">
-                <CancelOutlinedIcon href={cancel_url}/>
+                <CancelOutlinedIcon onClick={cancel}/>
             </Fab> : <Fab size="small" aria-label="Rerun">
-                <ReplayOutlinedIcon href={cancel_url}/>
+                <ReplayOutlinedIcon onClick={reRun}/>
             </Fab>}
         </ListItem>
         <Divider />
